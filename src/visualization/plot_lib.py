@@ -13,12 +13,18 @@ Other parameters plotted are confusion
 matrix, pr curve and roc curve.
 '''
 
-# FUNCTION: CALL THE PLOT FUNCTION
+'''
+Call training by epochs
+plot for loss and accuracy
+'''
 def call_epochs_plot(loss_hist, vloss_hist, acc_hist, vacc_hist, save_path):
     plot_metric_epochs(loss_hist, vloss_hist, "Training Loss", "Validation Loss", "Epochs", "Cross-Entropy Loss", "Loss Comparison", "loss_evolution", save_path)
     plot_metric_epochs(acc_hist, vacc_hist, "Training Accuracy", "Validation Accuracy", "Epochs", "Accuracy", "Accuracy Comparison", "accuracy_evolution", save_path)
 
-# FUNCTION: PLOT GRAPH AND SAVE 
+'''
+Actually plot the metrics
+evolution by epoch
+'''
 def plot_metric_epochs(train_data, val_data, train_label, val_label, x_label, y_label, title, file_name, save_path):
     plt.plot(train_data, color='royalblue', label=train_label, linewidth=.85)
     plt.plot(val_data, color='orange', label=val_label, linewidth=.85)
@@ -30,7 +36,9 @@ def plot_metric_epochs(train_data, val_data, train_label, val_label, x_label, y_
     plt.savefig(save_path + file_name + ".png")
     plt.close()
 
-# FUNCTION: plot confusion matrix
+'''
+Plot confusion matrix
+'''
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -60,8 +68,11 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('Label verdadeiro')
     plt.xlabel('Label previsto')
 
-# FUNCTION: call the confusion_matrix plot
-def call_plot_confusion_matrix(y_true, Y_pred, save_path, cm):
+'''
+Call the confusion matrix
+plot function
+'''
+def call_cm_plot(y_true, Y_pred, save_path, cm):
     target_names = ['Inadequate', 'Adequate']
 
     plt.figure(figsize=(10, 7))
@@ -69,7 +80,10 @@ def call_plot_confusion_matrix(y_true, Y_pred, save_path, cm):
     plt.savefig(save_path + ".png")
     plt.clf()   # clean figure for the second plot
 
-# FUNCTION: plot ROC Curve
+'''
+Plot ROC Curve for 
+AUC purposes
+'''
 def plot_roc_curve(y_true, Y_pred, save_path):
     # fpr_model, tpr_model, thresholds_model = roc_curve(y_true, Y_pred.ravel())
     fpr_model, tpr_model, thresholds_model = roc_curve(y_true, Y_pred[:, 1])
@@ -86,7 +100,10 @@ def plot_roc_curve(y_true, Y_pred, save_path):
     plt.savefig(save_path + ".png") 
     plt.clf()
 
-# FUNCTION: plot PRECISION_RECALL Curve
+'''
+Plot Precision-Recall
+curve
+'''
 def plot_pr_curve(y_true, Y_pred, save_path):
     # precision, recall, thresholds = precision_recall_curve(y_true, Y_pred.ravel())
     # average_precision = average_precision_score(y_true, Y_pred.ravel())

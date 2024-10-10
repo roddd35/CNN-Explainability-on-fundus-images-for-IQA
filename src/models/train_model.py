@@ -195,8 +195,4 @@ def train_model(train_loader, val_loader, EPOCHS, lr):
 
 
 		curr_epoch += 1
-	return model, loss_hist, vloss_hist, acc_hist, vacc_hist
-
-# parar o treino quando estabilizar os resultados
-# ideia: dentro do loop mesmo, mudar o otimizador para uma lr mais baixa
-# descongelar todas as camadas convolucionais (ou pelo menos as camadas finais)
+	return loss_hist, vloss_hist, acc_hist, vacc_hist
