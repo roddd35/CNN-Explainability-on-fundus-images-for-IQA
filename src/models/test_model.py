@@ -30,11 +30,13 @@ def evaluate_model(model, test_loader, loss_fn):
 			images, labels = data
 			images, labels = images.to(device), labels.to(device)
 
+			# get model logits
 			outputs = model(images)
 
 			loss = loss_fn(outputs, labels)
 			running_loss += loss.item()
 
+			# use softmax to get probabilities
 			probabilities = torch.softmax(outputs, dim=1)
 
 			_, predicted = torch.max(outputs.data, 1)

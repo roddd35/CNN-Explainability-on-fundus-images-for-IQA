@@ -19,11 +19,11 @@ def main():
     data_path = '/home/rodrigocm/scratch/datasets/brset/selected_photos'
     # data_path = '/home/rodrigocm/scratch/datasets/eyeq/images'
     save_images_path = '/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/'
-    weights_path = '/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/model/brset_84acc.pth'
+    weights_path = '/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/model/brset_model.pth'
 
     # define parameters
     epochs = 30
-    lr = 0.0001
+    lr = 0.00001
 
     # import dataset
     print("Importando imagens...")
@@ -36,10 +36,11 @@ def main():
     print(f"Concluído\nShape das imagens {train_features.size()}")
 
     # train dataset
-    # loss_hist, vloss_hist, acc_hist, vacc_hist = train_model(train_loader, val_loader, epochs, lr)
-    # call_epochs_plot(loss_hist, vloss_hist, acc_hist, vacc_hist, save_images_path)
+    loss_hist, vloss_hist, acc_hist, vacc_hist = train_model(train_loader, val_loader, epochs, lr)
+    call_epochs_plot(loss_hist, vloss_hist, acc_hist, vacc_hist, save_images_path)
 
     # evaluate model
+    # ajustar o threshold aqui na hora de gerar o report
     y_true, y_pred, y_pred_prob, cm = test_model(test_loader, weights_path)
 
     # plot cm, roc and pr curve
@@ -47,8 +48,3 @@ def main():
     plot_roc_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/roc_curve")
     plot_pr_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/pr_curve")
 main()
-
-# testar o modelo com o eyeq
-# testar o modelo no test_loader
-# plotar roc-auc, pr-curve, matriz de confusao
-# arrumar o modelo para tentar alcancar a mesma acuracia que o tensorflow

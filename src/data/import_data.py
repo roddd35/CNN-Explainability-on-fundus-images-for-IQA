@@ -4,9 +4,6 @@ from torchvision import datasets, transforms
 from torchvision.transforms import v2
 from torchvision.utils import save_image
 
-# https://www.kaggle.com/code/gxkok21/resnet50-with-pytorch
-# interessante para dar load nas imagens com class
-
 # denormalize image to save
 def denormalize(tensor, mean, std):
     mean = torch.tensor(mean).view(1, 3, 1, 1)

@@ -6,6 +6,9 @@ from torch.utils.data import DataLoader
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 print(f'Using {device} for inference')
 
+# tentar trocar o adam aqui e no pytorch e treinar novamente
+# usar SGD ou RMSPROP
+
 '''
 Define the CNN architecture
 based on ResNet50, with its
@@ -16,16 +19,17 @@ class Net(nn.Module):
 	def __init__(self):
 		super(Net, self).__init__()
 		self.model = torchvision.models.vgg16(weights=torchvision.models.VGG16_Weights.DEFAULT)
-		self.model = nn.Sequential(*list(self.model.children())[:-1]) # remove fc layer
+		self.features = self.model.features	# self.features has only convolutional layers from self.model
+		# self.model = nn.Sequential(*list(self.model.children())[:-1]) # remove fc layer
 		self.flatten = nn.Flatten()
-		self.fc1 = nn.Linear(25088, 1024)
+		self.fc1 = nn.Linear(25088, 512)
 		self.relu = nn.ReLU()
-		self.fc2 = nn.Linear(1024, 2)
+		self.fc2 = nn.Linear(512, 2)
 		self.dropout = nn.Dropout(p=0.5)
 
 	# x represents our data
 	def forward(self, x):
-		x = self.model(x)
+		x = self.features(x)
 		x = self.flatten(x)
 		x = self.fc1(x)
 		x = self.relu(x)
@@ -67,8 +71,11 @@ def validate_model(model, val_loader, loss_fn):
 			loss = loss_fn(outputs, labels)
 			running_loss += loss.item()
 
-			# the label with the highest energy will be our prediction (compute acc)
+			# use softmax to get probabilities
+			probabilities = torch.softmax(outputs, dim=1)
+
 			_, predicted = torch.max(outputs.data, 1)
+
 			total += labels.size(0)
 			accuracy += (predicted == labels).sum().item()
 
@@ -100,7 +107,7 @@ def train_one_epoch(model, train_loader, loss_fn, optimizer):
 		# zero gradients for every batch
 		optimizer.zero_grad()
 
-		# make predictions for this batch
+		# make predictions for this batch (outputs are logits)
 		outputs = model(images)
 
 		# compute the loss and its gradients, call backgpropagation
@@ -145,7 +152,7 @@ def train_model(train_loader, val_loader, EPOCHS, lr):
 	vloss_hist = []
 
 	# freeze all layers in the ResNet50 backbone
-	for param in model.model.parameters():
+	for param in model.features.parameters():
 		param.requires_grad = False  # freeze all convolutional layers
 	
 	# defining parameters
@@ -154,7 +161,6 @@ def train_model(train_loader, val_loader, EPOCHS, lr):
 
 	optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=lr)
 	loss_fn = nn.CrossEntropyLoss()
-	# optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
 	curr_epoch = 0
 	best_acc = 0.
@@ -190,9 +196,8 @@ def train_model(train_loader, val_loader, EPOCHS, lr):
 
 		if epoch == 10:
 			optimizer = torch.optim.Adam(model.parameters(), lr=lr/10)
-			for param in model.model.parameters():
+			for param in model.features[20:].parameters():	# unfreeze last 2 conv blocks (last 10 layers)
 				param.requires_grad = True
-
 
 		curr_epoch += 1
 	return loss_hist, vloss_hist, acc_hist, vacc_hist
