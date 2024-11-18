@@ -1,13 +1,9 @@
 import torch
 import torchvision
 import torch.nn as nn
-from torch.utils.data import DataLoader
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 print(f'Using {device} for inference')
-
-# tentar trocar o adam aqui e no pytorch e treinar novamente
-# usar SGD ou RMSPROP
 
 '''
 Define the CNN architecture

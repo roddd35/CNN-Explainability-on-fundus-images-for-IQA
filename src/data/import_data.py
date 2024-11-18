@@ -20,6 +20,14 @@ def save_img_to_dir(img, label):
 
     save_image(denorm_image, '/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/test.png')
 
+def import_gradcam_data(data_path):
+    transforms = set_test_transforms()
+    
+    data = datasets.ImageFolder(data_path, transform=transforms)
+    data_loader = torch.utils.data.DataLoader(data, shuffle=False, batch_size=1)
+
+    return data_loader
+
 # define transformations for training images
 def set_train_transforms():
     train_transforms = v2.Compose([

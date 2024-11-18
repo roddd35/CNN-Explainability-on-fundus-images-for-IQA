@@ -1,13 +1,15 @@
 import sys
 
 sys.path.append('/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/src/data')
+sys.path.append('/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/src/utils')
 sys.path.append('/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/src/models')
 sys.path.append('/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/src/visualization')
 
-from import_data import import_data
-from test_model import test_model
-from train_model import train_model
-from plot_lib import call_epochs_plot, call_cm_plot, plot_roc_curve, plot_pr_curve
+from gradcam import apply_gradcam # type: ignore
+from import_data import import_data # type: ignore
+from test_model import test_model # type: ignore
+from train_model import train_model # type: ignore
+from plot_lib import call_epochs_plot, call_cm_plot, plot_roc_curve, plot_pr_curve # type: ignore
 
 '''
 Main algorithm execution
@@ -29,9 +31,8 @@ def main():
     print("Importando imagens...")
     train_loader, val_loader, test_loader = import_data(data_path)
 
-    train_features, train_labels = next(iter(train_loader))
-    test_features, test_labels = next(iter(test_loader))
-    val_features, val_labels = next(iter(val_loader))
+    '''
+    train_features, _ = next(iter(train_loader))
 
     print(f"Concluído\nShape das imagens {train_features.size()}")
 
@@ -47,4 +48,8 @@ def main():
     call_cm_plot(y_true, y_pred, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/confusion_matrix", cm=cm)
     plot_roc_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/roc_curve")
     plot_pr_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/pr_curve")
+    '''
+
+    apply_gradcam(weights_path)
+
 main()

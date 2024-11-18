@@ -1,8 +1,6 @@
 import torch
-import torchvision
 import torch.nn as nn
 import numpy as np
-from torch.utils.data import DataLoader
 
 from train_model import Net
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, roc_auc_score, precision_score, recall_score
@@ -57,7 +55,7 @@ def evaluate_model(model, test_loader, loss_fn):
 Print all the metrics values
 '''
 def display_metrics(loss, accuracy, y_true, y_pred):
-	target_names = ['Inadequate', 'Adequate']
+	target_names = ['Adequate', 'Inadequate']
 
 	print(f"\nModel metrics results:\n")
 	print(f"{'-'*45}")
