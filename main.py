@@ -31,7 +31,6 @@ def main():
     print("Importando imagens...")
     train_loader, val_loader, test_loader = import_data(data_path)
 
-    '''
     train_features, _ = next(iter(train_loader))
 
     print(f"Concluído\nShape das imagens {train_features.size()}")
@@ -48,7 +47,6 @@ def main():
     call_cm_plot(y_true, y_pred, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/confusion_matrix", cm=cm)
     plot_roc_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/roc_curve")
     plot_pr_curve(y_true, y_pred_prob, save_path="/home/rodrigocm/research/gradcam-on-eye-fundus-images-IQA/data/images/charts/pr_curve")
-    '''
 
     apply_gradcam(weights_path)
 
